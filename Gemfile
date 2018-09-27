@@ -23,16 +23,9 @@ gem 'mailgun-ruby', '~> 1.1.6'
 gem 'sendgrid-ruby'
 # Gem to manage http requests
 gem	'httparty', '~> 0.15.6'
-# Unofficial gem for the Bittrex Api
-gem 'bittrex', '~> 0.0.1'
-# A pure-Ruby implementation of the SSH2 client protocol
-gem 'net-ssh'
-# A pure Ruby implementation of the SCP client protocol
-gem 'net-scp'
 gem 'hirb'
 gem 'erd'
 gem 'paperclip', '~> 5.1'
-gem 'carrierwave-base64'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

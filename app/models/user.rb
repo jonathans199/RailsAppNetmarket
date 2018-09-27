@@ -49,7 +49,7 @@ class User < ApplicationRecord
   has_one :server_config
   has_many :botpro_requests
   belongs_to :sponsor, required: false, class_name: 'User', primary_key: 'uuid', foreign_key: 'sponsor_uuid'
-  has_one :botpro_trading_key
+
   #validations
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, :username, presence: true
