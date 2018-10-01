@@ -38,10 +38,9 @@ class Api::V1::Admin::InvoicesController < ApplicationController
             end
             update_invoice  = Compensation.update_invoice(invoice, params[:data][:txid], user)
             subs            = Compensation.create_subscription(invoice) if update_invoice
-            # Compensation.update_binary_points(user, subs, invoice, user_existence) if subs
             Compensation.create_unilevel_bonus(invoice,subs) if subs
-
             temp_user.destroy if !user_existence
+            Compensation.first_matrix(invoice) if subs 
             render json: { message: 'Paid invoice' }, status: :ok
           end
         else

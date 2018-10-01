@@ -40,8 +40,6 @@ Rails.application.routes.draw do
 
         scope 'trees' do
           get 'user/:uuid', to: 'trees#show_user_subtree'
-          get 'parent_user/:uuid', to: 'trees#show_parent_user_subtree'
-          get 'search_user/:username', to: 'trees#show_search_user_subtree'
         end
 
         scope 'vaults' do

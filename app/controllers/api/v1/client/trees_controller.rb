@@ -1,44 +1,32 @@
 class Api::V1::Client::TreesController < ApplicationController
-  skip_before_action :authenticate_request!, except: [:show_search_user_subtree]
-
   # show current user tree
   def show_user_subtree
-    user = User.where(uuid: params[:uuid]).select(:id,:uuid,:ancestry).first.subtree(:to_depth => 2).arrange_serializable[0]
-    if user
-      tree_array(user)
-      render json: tree_array(user), status: :ok
+    if @current_user.matrices.count > 0
+      matrix = filter(@current_user.matrices.last)
+      render json: matrix, status: 200
     else
-      render json: { error: 'Invalid user' }, status: :unauthorized
+      render json: { m: "No active matrices" }, status: 400
     end
-  end
 
-  # show user selected above on the tree
-  def show_parent_user_subtree
-    temp_user = User.find_by(uuid: params[:uuid])
-    temp_user = temp_user.parent if temp_user != @current_user
-    user = temp_user.subtree(:to_depth => 2).arrange_serializable[0]
-    if user
-      tree_array(user)
-      render json: {uuid: temp_user.uuid, tree_array: tree_array(user)}, status: :ok
-    else
-      render json: { error: 'Invalid user' }, status: :unauthorized
-    end
-  end
-
-  # search user node on the user tree
-  def show_search_user_subtree
-    temp_user = User.find_by(username: params[:username])
-    user = @current_user.subtree(:to_depth => 2).arrange_serializable[0]
-    user = temp_user.subtree(:to_depth => 2).arrange_serializable[0] if @current_user.subtree.include?(temp_user)
-    if user
-      tree_array(user)
-      render json: {uuid: user["uuid"], tree_array: tree_array(user)}, status: :ok
-    else
-      render json: { error: 'Invalid user' }, status: :unauthorized
-    end
   end
 
   private
+
+    def filter(matrix)
+      matrix_tmp = matrix
+      matrix = matrix.attributes
+      matrix['users'] = fetch_user(matrix_tmp.users)
+      matrix
+    end
+
+    def fetch_user(array)
+      array = "#{@current_user.id},#{array}"
+      array = array.split(",").map{ |x|
+        User.where(id:x).select(:uuid,:username).last
+      }.compact
+      # return array.count
+    end
+
     def tree_array(user)
       array = []
       array.push(user["username"], user["uuid"])
