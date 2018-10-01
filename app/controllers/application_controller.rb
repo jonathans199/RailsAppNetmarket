@@ -2,6 +2,11 @@ class ApplicationController < ActionController::API
   include Authenticable
   include EmailNotification
   include UserCheck
+  include BittrexInt
+  include Blockio
+  include TreeGen
+  include Compensation
+  
   before_action :authenticate_request!
 
   protected

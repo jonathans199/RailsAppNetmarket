@@ -16,7 +16,7 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module WavesApi
+module NetMarketApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.autoload_paths += %W(#{config.root}/lib) # add this line

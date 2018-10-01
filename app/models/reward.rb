@@ -39,7 +39,7 @@ class Reward < ApplicationRecord
 
     # Check if the current account can recive it double price
     def check_max_value
-      max_value     = self.user.subscriptions.map { |x| x.price }.reduce(0,:+) * 2
+      max_value     = self.user.subscriptions.map { |x| x.plan.price }.reduce(0,:+) * 2
       rewards_value = self.user.rewards.map { |x| x.value }.reduce(0,:+)
       active_subs   = self.user.subscriptions.where(subscription_status_id: 11)
       

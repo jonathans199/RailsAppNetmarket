@@ -17,6 +17,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :country
       t.string :city
       t.string :address
+      t.boolean :withdrawals_enabled, default: true
       t.datetime :confirmed_at
       t.datetime :last_login
       t.attachment :avatar

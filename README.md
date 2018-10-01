@@ -1,24 +1,9 @@
-# README
+NET MARKET CAP API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+BASIC COMMAND TO START
 
-Things you may want to cover:
+rake db:create db:migrate db:seed
 
-* Ruby version
+THEN
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+rails server -p 3001

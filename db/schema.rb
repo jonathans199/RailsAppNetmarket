@@ -10,40 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180926020704) do
-
-  create_table "categories", force: :cascade do |t|
-    t.string "name"
-    t.integer "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "coupons", force: :cascade do |t|
-    t.string "uuid"
-    t.integer "user_id"
-    t.boolean "redeem", default: false
-    t.integer "withdrawal_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_coupons_on_user_id"
-    t.index ["withdrawal_id"], name: "index_coupons_on_withdrawal_id"
-  end
-
-  create_table "courses", force: :cascade do |t|
-    t.string "uuid"
-    t.string "title"
-    t.text "description"
-    t.string "language"
-    t.integer "user_id"
-    t.string "avatar_file_name"
-    t.string "avatar_content_type"
-    t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "category_id"
-  end
+ActiveRecord::Schema.define(version: 20180928174029) do
 
   create_table "currencies", force: :cascade do |t|
     t.string "name"
@@ -52,17 +19,6 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_currencies_on_code"
-  end
-
-  create_table "inversion_profit_payments", force: :cascade do |t|
-    t.float "value1"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.float "value2"
-    t.float "value3"
-    t.float "value4"
-    t.float "value5"
-    t.float "value6"
   end
 
   create_table "invoice_statuses", force: :cascade do |t|
@@ -87,10 +43,19 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.integer "plan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "total_plans"
     t.index ["temp_user_id"], name: "index_invoices_on_temp_user_id"
     t.index ["user_id"], name: "index_invoices_on_user_id"
     t.index ["wallet"], name: "index_invoices_on_wallet"
+  end
+
+  create_table "matrices", force: :cascade do |t|
+    t.string "uuid"
+    t.boolean "reedemed", default: false
+    t.text "users"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_matrices_on_user_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -168,7 +133,6 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.datetime "expiration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "price"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -198,21 +162,6 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.index ["uuid"], name: "index_temp_users_on_uuid"
   end
 
-  create_table "units", force: :cascade do |t|
-    t.string "uuid"
-    t.string "title"
-    t.text "description"
-    t.string "duration"
-    t.text "embed_code"
-    t.integer "course_id"
-    t.string "avatar_file_name"
-    t.string "avatar_content_type"
-    t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "uuid"
     t.string "parent_uuid"
@@ -230,6 +179,7 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.string "country"
     t.string "city"
     t.string "address"
+    t.boolean "withdrawals_enabled", default: true
     t.datetime "confirmed_at"
     t.datetime "last_login"
     t.string "avatar_file_name"
@@ -240,7 +190,6 @@ ActiveRecord::Schema.define(version: 20180926020704) do
     t.datetime "updated_at", null: false
     t.string "ancestry"
     t.integer "ancestry_depth", default: 0
-    t.boolean "withdrawals_enabled", default: true
     t.index ["ancestry"], name: "index_users_on_ancestry"
     t.index ["uuid"], name: "index_users_on_uuid"
   end

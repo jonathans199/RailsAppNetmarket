@@ -1,5 +1,4 @@
 module UserCheck
-
    # check if user has two directs
    def self.user_has_two_directs_each_side?(user)
     children = user.children
