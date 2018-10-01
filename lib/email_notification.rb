@@ -7,7 +7,7 @@ module EmailNotification
   def self.send_not_active_subscription(user, subscription)
     subscription.plan.subscription ? p_type = 'inscripcion a bot' : p_type = 'inversion'
     subscription.plan.subscription ? r_type = ' por tus planes de inversión y referidos' : r_type = ' por rendimiento de plan de inversión'
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: user.email)
     subject   = 'Net Market Cap - Plan expired'
     content   = Content.new(type: 'text/html', value:"
@@ -29,7 +29,7 @@ module EmailNotification
   end
   
   def self.send_not_active_notification(parent, user, subs)
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: parent.email)
     subject   = 'Net Market Cap - Reward Caneled'
 
@@ -56,7 +56,7 @@ module EmailNotification
   end
   
   def self.send_confirmation_email(password,user)
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: user.email)
     subject   = 'Net Market Cap - Email Confirmation'
     shref     = Rails.application.secrets.confirm_route + user.confirmation_token
@@ -305,7 +305,7 @@ module EmailNotification
   end
 
   def self.send_notification(invoice)
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: invoice.user.email)
     subject   = 'Net Market Cap - Plan Activated'
     content   = Content.new(type: 'text/html', value:'
@@ -547,7 +547,7 @@ module EmailNotification
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td style="border:none;border-radius:none;color:#fff;cursor:auto;padding:10px 25px;" align="center" valign="middle" bgcolor="#17284c">
-                                                                                            <a href="https://app.netmarketcap.co/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank"> Login </a>
+                                                                                            <a href="https://app.netmarketcap.com/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank"> Login </a>
                                                                                         </td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -641,7 +641,7 @@ module EmailNotification
   def self.send_recovery_email(user,new_password)
     @new_password = new_password
     @user         = user
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: @user.email)
     subject   = 'Net Market Cap - Password Changed'
 
@@ -798,7 +798,7 @@ module EmailNotification
                                                                               <tbody>
                                                                                   <tr>
                                                                                       <td style="border:none;border-radius:none;color:#fff;cursor:auto;padding:10px 25px;" align="center" valign="middle" bgcolor="#17284c">
-                                                                                          <a href="https://app.netmarketcap.co/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank"> Login </a>
+                                                                                          <a href="https://app.netmarketcap.com/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank"> Login </a>
                                                                                       </td>
                                                                                   </tr>
                                                                               </tbody>
@@ -891,7 +891,7 @@ module EmailNotification
     @invoice    = invoice
     invoice     = Invoice.find_by(uuid: @invoice.uuid)
     total       = invoice.price + invoice.fees
-    from      = Email.new(email: 'noreply@netmarketcap.co')
+    from      = Email.new(email: 'info@netmarketcap.com')
     to        = Email.new(email: client.email)
     subject   = 'Net Market Cap - Payment Due'
 
@@ -1186,7 +1186,7 @@ module EmailNotification
 
                                                                                         <h4>Details</h4>
                                                                                         <div class="break-d">
-                                                                                            <p><strong>Vendor Name:</strong> netmarketcap.co
+                                                                                            <p><strong>Vendor Name:</strong> netmarketcap.com
                                                                                                 <br />
                                                                                                 <strong>Invoice No:</strong> ' + invoice.uuid + '
                                                                                             </p>
@@ -1210,7 +1210,7 @@ module EmailNotification
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td style="border:none;border-radius:none;color:#fff;cursor:auto;padding:10px 25px;" align="center" valign="middle" bgcolor="#17284c">
-                                                                                        <a href="https://app.netmarketcap.co/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank">  Login Net Market Cap </a>
+                                                                                        <a href="https://app.netmarketcap.com/#/login" style="text-decoration:none;background:#17284c;color:#fff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:19px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;" target="_blank">  Login Net Market Cap </a>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>

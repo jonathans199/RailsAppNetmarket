@@ -1,5 +1,5 @@
-User.create(username: 'root_code', email: 'admin@netmarketcap.co', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, active:true, confirmed_at: Time.now.utc, right: false, left_son: true)
-TempUser.create(parent_uuid: User.first.uuid, username: 'master_admin', email: 'admin@netmarketcap.co', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, active:true, confirmed_at: Time.now.utc, admin: true)
+User.create(username: 'root_code', email: 'admin@netmarketcap.com', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, active:true, confirmed_at: Time.now.utc, right: false, left_son: true)
+TempUser.create(parent_uuid: User.first.uuid, username: 'master_admin', email: 'admin@netmarketcap.com', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, active:true, confirmed_at: Time.now.utc, admin: true)
 
 Currency.create(name: 'USD', code: 11, decimals: 2)
 Currency.create(name: 'BTC', code: 12, decimals: 8)
@@ -29,8 +29,8 @@ RewardType.create(name: 'Indirect Bonus', code: 14, description: 'Indirect Bonus
 RewardType.create(name: 'Matrix Bonus', code: 15, description: 'Matrix Bonus')
 RewardType.create(name: 'Club Bonus', code: 16, description: 'Club Bonus')
 
-User.create(username: 'left_leader', email: 'admin@netmarketcap.co', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, sponsor_uuid: User.first.uuid, parent_uuid: User.first.uuid, active:true, confirmed_at: Time.now.utc, right: false, left_son: true)
-User.create(username: 'right_leader', email: 'admin@netmarketcap.co', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, sponsor_uuid: User.first.uuid, parent_uuid: User.first.uuid, active:true, confirmed_at: Time.now.utc, right: true, left_son: false)
+User.create(username: 'left_leader', email: 'admin@netmarketcap.com', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, sponsor_uuid: User.first.uuid, parent_uuid: User.first.uuid, active:true, confirmed_at: Time.now.utc, right: false, left_son: true)
+User.create(username: 'right_leader', email: 'admin@netmarketcap.com', password: '121212', password_confirmation: '121212', uuid: SecureRandom.uuid, sponsor_uuid: User.first.uuid, parent_uuid: User.first.uuid, active:true, confirmed_at: Time.now.utc, right: true, left_son: false)
 
 WithdrawalType.create(name: 'Payout in crytpo', code: 11, description: 'Payout in crytpo currency')
 
