@@ -1,6 +1,12 @@
 class Api::V1::Client::TreesController < ApplicationController
+
+  def index
+    matrices = @current_user.matrices.map{ |x| filter(x) }
+    render json: matrices, status: 200
+  end
+
   # show current user tree
-  def show_user_subtree
+  def show
     if @current_user.matrices.count > 0
       matrix = filter(@current_user.matrices.last)
       render json: matrix, status: 200
@@ -16,13 +22,15 @@ class Api::V1::Client::TreesController < ApplicationController
       matrix_tmp = matrix
       matrix = matrix.attributes
       matrix['users'] = fetch_user(matrix_tmp.users)
+      matrix['plan'] = matrix_tmp.plan.name
+      matrix['plan_price'] = matrix_tmp.plan.price
       matrix
     end
 
     def fetch_user(array)
       array = "#{@current_user.id},#{array}"
       array = array.split(",").map{ |x|
-        User.where(id:x).select(:uuid,:username).last
+        User.where(id:x).select(:uuid,:username,:created_at).last
       }.compact
       # return array.count
     end

@@ -1,38 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                  :integer          not null, primary key
-#  name                :string
-#  last_name           :string
-#  username            :string
-#  email               :string
-#  password_digest     :string
-#  phone               :string
-#  document            :string
-#  sponsor_uuid        :string
-#  last_login          :datetime
-#  uuid                :string
-#  country             :string
-#  city                :string
-#  address             :string
-#  about               :string
-#  confirmed_at        :datetime
-#  parent_uuid         :string
-#  right               :boolean
-#  active              :boolean
-#  left_son            :boolean
-#  openpro             :boolean          default(FALSE)
-#  avatar_file_name    :string
-#  avatar_content_type :string
-#  avatar_file_size    :integer
-#  avatar_updated_at   :datetime
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  ancestry            :string
-#  ancestry_depth      :integer          default(0)
-#
-
 class User < ApplicationRecord
   #associations
   # include ImageUploader[:image]
@@ -57,16 +22,12 @@ class User < ApplicationRecord
   # validates_confirmation_of :password
   #calllbacks
   after_create :create_vault
-  after_create :add_to_matrix
   before_save :downcase_username
 
   has_attached_file :avatar, styles: { medium: '300x300>', thumb: '100x100>' }, default_url: '/img/anon_user.png'
   do_not_validate_attachment_file_type :avatar
     
   private 
-    def add_to_matrix
-      Compensation.matrix(self)
-    end
 
     def create_vault
       Vault.create(user_id:self.id)

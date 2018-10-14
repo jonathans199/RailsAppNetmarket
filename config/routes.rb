@@ -5,7 +5,8 @@ Rails.application.routes.draw do
       namespace :client do
         resources :plans
         resources :sessions
-      
+        resources :trees
+
         resources :invoices do
           post 'activation', to: 'invoices#update'
         end
@@ -36,10 +37,6 @@ Rails.application.routes.draw do
           get 'total/:uuid', to: 'points#total'
           get 'bots/:uuid', to: 'points#bots'
           get 'total_rewards', to: 'points#total_rewards'
-        end
-
-        scope 'trees' do
-          get 'user/:uuid', to: 'trees#show_user_subtree'
         end
 
         scope 'vaults' do

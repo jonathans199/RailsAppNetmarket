@@ -1,18 +1,23 @@
 module Compensation
-  def self.matrix(user)
-    matrix = Matrix.where(reedemed: false)
-    matrix.map { |x| 
-      total = "#{x.users.to_s},#{user.id}"
-      x.update(users: "#{total}")
-      x.update(reedemed: true) if total.split(",").count == 14
+  def self.update_matrix(invoice)
+    # matrix = Matrix.where(reedemed: false)
+    matrix = Matrix.where(reedemed: false, plan_id: invoice.plan.id).map{ |x| x if x.user.subscriptions.count > 0 }.compact
+    matrix.map { |x|
+      if !x.users.split(",").include?(invoice.user.id.to_s)
+        total = "#{x.users.to_s},#{invoice.user.id}"
+        x.update(users: "#{total}")
+        x.update(reedemed: true) if total.split(",").count == 14
+      end
     }
   end
 
-  def self.first_matrix(invoice)
-    parent  = User.where(uuid:invoice.user.parent_uuid).select(:id,:uuid).last
-    counter = User.where(parent_uuid: parent.uuid).select(:id).count
-    Matrix.create(user_id: parent.id, users:"#{invoice.user.id}") if counter == 2
+  # create first matrix for parent user. Returns false if user already have matrix
+  def self.first_matrix_on_plan(invoice)
+    parent      = User.where(uuid:invoice.user.parent_uuid).select(:id,:uuid).last
+    parent_plan = parent.subscriptions.where(subscription_status_id:11).count > 0 ? (parent.subscriptions.where(subscription_status_id:11).last.plan.price) : (false)
+    Matrix.create(user_id: parent.id, users:"#{invoice.user.id}", plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
   end
+
   # create direct bonus on the system
   def self.create_unilevel_bonus(invoice,subs)
     if !invoice.plan.subscription
