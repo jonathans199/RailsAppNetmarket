@@ -1,5 +1,5 @@
 class Api::V1::Admin::ReportsController < ApplicationController
-  
+  before_action :admin_user
   # show all users on the system and all relevant data such as payments withdrawals and others
   def users
     result = User.where(created_at: params[:start_date]..(params[:end_date]))
@@ -19,7 +19,7 @@ class Api::V1::Admin::ReportsController < ApplicationController
   # group invoices and prices
   def invoices_group 
     render json: {
-      paid_invoices:    Invoice.where(created_at: params[:start_date]..(params[:end_date]), invoice_status_id: 12).count,
+      paid_invoices: Invoice.where(created_at: params[:start_date]..(params[:end_date]), invoice_status_id: 12).count,
       pending_invoices: Invoice.where(created_at: params[:start_date]..(params[:end_date]), invoice_status_id: 11).count,
       billed_amount: Invoice.where(created_at: params[:start_date]..(params[:end_date]), invoice_status_id: 12).map { |x| x.price + x.plan.fees }.reduce(0,:+),
       pending_amount: Invoice.where(created_at: params[:start_date]..(params[:end_date]), invoice_status_id: 11).map { |x| x.price + x.plan.fees }.reduce(0,:+)

@@ -1,7 +1,7 @@
 class Api::V1::Client::SessionsController < ApplicationController
   skip_before_action :authenticate_request!, only: [:create]
 
-  # verify user on the database and return token to the forntend
+  # verify user on the database and return token to the frontend
   def create
     user = TempUser.find_by(username: params[:username])
     user = User.find_by(username: params[:username]) if !user
@@ -19,7 +19,7 @@ class Api::V1::Client::SessionsController < ApplicationController
     end
   end
 
-  # verify if the session is still enable
+  # verify if the session is still available
   def index
     render json: filter(@current_user), status: :ok if @current_user
     render json: { message: 'expired' }, status: :not_found if !@current_user
@@ -29,6 +29,9 @@ class Api::V1::Client::SessionsController < ApplicationController
     def filter(user)
       user_tmp = user
       user = user.attributes.except('id', 'created_at', 'updated_at', 'confirmed_at', 'password_digest')
-      user
+      if user_tmp.respond_to? (:subscriptions)
+        user['active_plan'] = user_tmp.subscriptions.where(subscription_status_id:11).count > 0 ? (true) : (false)
+      end
+      return user
     end
 end
