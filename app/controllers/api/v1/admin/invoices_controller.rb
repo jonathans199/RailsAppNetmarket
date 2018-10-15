@@ -1,6 +1,7 @@
 class Api::V1::Admin::InvoicesController < ApplicationController
   before_action :admin_user, except: [:update]
-
+  skip_before_action :authenticate_request!, only: [:update]
+  
   # List all invoices on the system
   def index
     data = params[:pending] == 'true' ? (11) : (12)
