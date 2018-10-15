@@ -69,6 +69,7 @@ Rails.application.routes.draw do
         resources :courses
         resources :units
         resources :sessions
+        resources :plans
         
         resources :invoices do
           post 'activation', to: 'invoices#update'
