@@ -1,7 +1,7 @@
 class Api::V1::Client::TreesController < ApplicationController
 
   def index
-    matrices = @current_user.matrices.map{ |x| filter(x) }
+    matrices = @current_user.matrices.order(created_at: :desc).map{ |x| filter(x) }
     render json: matrices, status: 200
   end
 
@@ -28,7 +28,6 @@ class Api::V1::Client::TreesController < ApplicationController
     end
 
     def fetch_user(array)
-      array = "#{@current_user.id},#{array}"
       array = array.split(",").map{ |x|
         User.where(id:x).select(:uuid,:username,:created_at).last
       }.compact
