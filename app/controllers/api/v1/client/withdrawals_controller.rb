@@ -64,12 +64,10 @@ class Api::V1::Client::WithdrawalsController < ApplicationController
     end
 
     def calculate_fees(value)
-      return (value.to_f.round(2) * 0.05).round(2) if params[:currency_id].to_i == 14 
-      (value.to_f.round(2) * 0.07).round(2)
+      (value.to_f.round(2) * 0.05).round(2)
     end
 
     def calculate_settle(value)
-      return (value.to_f.round(2) * 0.95).round(2) if params[:currency_id].to_i == 14 
-      (value.to_f.round(2) * 0.93).round(2)
+      (value.to_f.round(2) * 0.95).round(2)
     end
 end
