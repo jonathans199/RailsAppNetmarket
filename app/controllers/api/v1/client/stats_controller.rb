@@ -48,7 +48,7 @@ class Api::V1::Client::StatsController < ApplicationController
   # show residual_bonus bonus earned
   def residual_bonus
     render json: {
-      rewards: @current_user.rewards.where(reward_type_id:14).order(created_at: :desc).map { |x| referral_filter(x) }.compact
+      rewards: @current_user.rewards.where(reward_type_id:15).order(created_at: :desc).map { |x| referral_filter(x) }.compact
     }
   end
 
@@ -100,7 +100,7 @@ class Api::V1::Client::StatsController < ApplicationController
     def investments_filter(object)
       object_tmp    = object
       invest_tmp    = object_tmp.attributes
-      invest_tmp['plan_id']     = "#{object_tmp.subscription.plan.name} - $#{object_tmp.subscription.price}"
+      invest_tmp['plan_id']     = "#{object_tmp.subscription.plan.name} - $#{object_tmp.subscription.plan.price}"
       invest_tmp['currency_id']     = object_tmp.currency.name
       invest_tmp['reward_type_id']  = object_tmp.reward_type.name
       invest_tmp['reward_status_id'] = object_tmp.reward_status.name

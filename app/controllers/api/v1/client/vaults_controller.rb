@@ -4,13 +4,18 @@ class Api::V1::Client::VaultsController < ApplicationController
   # show current user balances in several currencies
   def show
     vault       = Vault.where(user_id:@current_user.id).select(:amount).first
-    balance_btc = (vault.amount / BittrexInt.btc_usd).round(8)
-    balance_ltc = (vault.amount / BittrexInt.ltc_usd).round(8)
     balance_usd = vault.amount.round(2)
+    total_unilevel = @current_user.rewards.where(reward_type_id:12, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
+    total_matrices = @current_user.rewards.where(reward_type_id:15, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
+    total_rewards = @current_user.rewards.where(reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
+    total_trading = @current_user.rewards.where(reward_type_id:11, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
+
     render json: {
-      balance_btc: balance_btc,
-      balance_ltc: balance_ltc,
-      balance_usd: balance_usd
+      balance_usd: balance_usd,
+      total_rewards: total_rewards,
+      total_trading: total_trading,
+      total_matrices: total_matrices,
+      total_unilevel: total_unilevel
     }, status: :ok
   end
 

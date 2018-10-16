@@ -1,21 +1,35 @@
 module Compensation
   def self.update_matrix(invoice)
-    # matrix = Matrix.where(reedemed: false)
     matrix = Matrix.where(reedemed: false, plan_id: invoice.plan.id).map{ |x| x if x.user.subscriptions.count > 0 }.compact
     matrix.map { |x|
-      if !x.users.split(",").include?(invoice.user.id.to_s)
-        total = "#{x.users.to_s},#{invoice.user.id}"
-        x.update(users: "#{total}")
-        x.update(reedemed: true) if total.split(",").count == 14
+      users_array = x.users.split(",")
+      if !users_array.include?(invoice.user.id.to_s)
+        if users_array.count == 14
+          self.check_matrix_bonus(x,invoice)
+        else
+          total = "#{x.users.to_s},#{invoice.user.id}"
+          final_update = x.update(users: "#{total}")
+        end
       end
     }
+  end
+
+  # matrix reach 13 users
+  def self.check_matrix_bonus(matrix,invoice)
+    if User.where(parent_uuid:matrix.user.uuid).select(:id).count == 2
+      value = ((matrix.plan.price * 14) * 0.05).round(2)
+      total = "#{matrix.users.to_s},#{invoice.user.id}"
+      bonus = matrix.user.rewards.create(value: value, reward_type_id: 15, reward_status_id: 11, currency_id: 11, subscription_id: matrix.user.subscriptions.last.id)
+      final = matrix.update(reedemed: true, users: total) if bonus
+      matrix.user.matrices.create(users:matrix.user.id, plan_id: matrix.plan.id) if final
+    end
   end
 
   # create first matrix for parent user. Returns false if user already have matrix
   def self.first_matrix_on_plan(invoice)
     parent      = User.where(uuid:invoice.user.parent_uuid).select(:id,:uuid).last
     parent_plan = parent.subscriptions.where(subscription_status_id:11).count > 0 ? (parent.subscriptions.where(subscription_status_id:11).last.plan.price) : (false)
-    Matrix.create(user_id: parent.id, users:"#{invoice.user.id}", plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
+    Matrix.create(user_id: parent.id, users:invoice.user.id, plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
   end
 
   # create direct bonus on the system
@@ -81,39 +95,5 @@ module Compensation
     EmailNotification.send_notification(invoice)
   end
 
-  # update user points depending on the current invoice paid
-  def self.update_binary_points(user, subs, invoice, user_existence)
-    if !invoice.plan.subscription
-      if user.ancestry_depth > 0
-        direct_parent = User.find_by(uuid: user.sponsor_uuid)
-        direct_parent = User.find_by(uuid: temp_user.uuid).ancestors.at_depth(0).first if !direct_parent
-        parents = user.ancestors
-        value   = subs.price
-        parents.each do |parent|
-          active_plans = true if parent.subscriptions.map { |x| x.plan_id if x.subscription_status_id == 11  }.compact.count > 0
-          if active_plans
-            if parent.children[0].descendants.where(uuid: user.uuid).exists? || parent.children[0].uuid == user.uuid
-              if parent.children[0].left_son == true
-                parent.point.left_total_points += value.to_i
-                parent.point.left_points += value.to_i
-              else
-                parent.point.right_total_points += value.to_i
-                parent.point.right_points += value.to_i
-              end
-            else
-              if parent.children[1].left_son == true
-                parent.point.left_total_points += value.to_i
-                parent.point.left_points += value.to_i
-              else
-                parent.point.right_total_points += value.to_i
-                parent.point.right_points += value.to_i
-              end
-            end
-            parent.point.right_total_points > parent.point.left_total_points ? parent.point.diff = parent.point.right_total_points - parent.point.left_total_points : parent.point.diff = parent.point.left_total_points - parent.point.right_total_points
-            parent.point.save
-          end
-        end
-      end
-    end
-  end
+  
 end

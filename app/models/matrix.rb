@@ -3,7 +3,7 @@ class Matrix < ApplicationRecord
 	belongs_to :plan
 
   before_create :generate_uuid
-	validates :plan_id, uniqueness: { scope: :user_id }
+	validates :plan_id, uniqueness: { scope: [:user_id, :reedemed] }
 
   private
 		def generate_uuid
