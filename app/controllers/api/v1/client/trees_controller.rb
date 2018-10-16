@@ -21,15 +21,18 @@ class Api::V1::Client::TreesController < ApplicationController
     def filter(matrix)
       matrix_tmp = matrix
       matrix = matrix.attributes
-      matrix['users'] = fetch_user(matrix_tmp.users)
+      matrix['users'] = fetch_users(matrix_tmp.users)
       matrix['plan'] = matrix_tmp.plan.name
       matrix['plan_price'] = matrix_tmp.plan.price
       matrix
     end
 
-    def fetch_user(array)
+    def fetch_users(array)
       array = array.split(",").map{ |x|
-        User.where(id:x).select(:uuid,:username,:created_at).last
+        user_tmp = User.where(id:x).select(:uuid,:parent_uuid,:username,:created_at).last
+        user = user_tmp.attributes
+        user['username'] = user_tmp.parent_uuid == @current_user.uuid ? ("direct-#{user_tmp.username}") : (user_tmp.username)
+        user
       }.compact
       # return array.count
     end
