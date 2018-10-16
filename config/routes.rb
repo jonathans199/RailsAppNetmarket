@@ -20,7 +20,6 @@ Rails.application.routes.draw do
 
         resources :rewards do 
           get 'create_binary_rewards',     to: 'rewards#create_binary_rewards'
-          post 'create_investment_rewards', to: 'rewards#create_investment_rewards'
         end
 
         scope 'subscriptions' do
@@ -62,7 +61,6 @@ Rails.application.routes.draw do
         end
       end
     
-
       namespace :admin do
         resources :users
         resources :temp_users
@@ -70,7 +68,8 @@ Rails.application.routes.draw do
         resources :units
         resources :sessions
         resources :plans
-        
+        resources :rewards
+
         resources :invoices do
           post 'activation', to: 'invoices#update'
         end

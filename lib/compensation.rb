@@ -29,7 +29,8 @@ module Compensation
   def self.first_matrix_on_plan(invoice)
     parent      = User.where(uuid:invoice.user.parent_uuid).select(:id,:uuid).last
     parent_plan = parent.subscriptions.where(subscription_status_id:11).count > 0 ? (parent.subscriptions.where(subscription_status_id:11).last.plan.price) : (false)
-    Matrix.create(user_id: parent.id, users:invoice.user.id, plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
+    total       = "#{parent.id},#{invoice.user.id}"
+    Matrix.create(user_id: parent.id, users:total, plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
   end
 
   # create direct bonus on the system
