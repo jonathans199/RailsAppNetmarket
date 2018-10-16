@@ -5,10 +5,10 @@ class Api::V1::Client::UsersController < ApplicationController
   # show last users on the dashboard
   def index
     from_time = Time.now
-    render json: User.all.order(id: :desc).limit(10).map { |x|
+    render json: Invoice.where(invoice_status_id: 12).order(id: :desc).limit(10).map { |x|
         {
-          username: x.username,
-          plan: "#{x.subscriptions.last.plan.name} - $#{x.subscriptions.last.plan.price}USD",
+          username: x.user.username,
+          plan: "#{x.plan.name} - $#{x.plan.price} USD",
           created_at: x.created_at
         }
       }
