@@ -1,6 +1,7 @@
 module UserCheck
-   # check if user has two directs
-   def self.user_has_two_directs_each_side?(user)
+
+  # check if user has two directs
+  def self.user_has_two_directs_each_side?(user)
     children = user.children
     two_directs_on_tree = false if children.count < 2
     two_directs_on_tree = true if children.map { |x| x.left_son }.include?(true) && children.map { |x| x.left_son }.include?(false)
