@@ -7,16 +7,25 @@ module Compensation
         if users_array.count == 14
           self.check_matrix_bonus(x,invoice)
         else
-          total = "#{x.users.to_s},#{invoice.user.id}"
-          final_update = x.update(users: "#{total}")
+          user_matrix_no = x.user.matrices.where(plan_id: x.plan_id).select(:id).count
+          available = true
+          available = false if user_matrix_no == 2 && self.directs_on_plan(x) < 3
+          available = false if user_matrix_no == 3 && self.directs_on_plan(x) < 6
+          total = "#{x.users.to_s},#{invoice.user.id}" if available
+          final_update = x.update(users: "#{total}") if available
         end
       end
     }
   end
 
-  # matrix reach 13 users
+  # matrix reach 14 users
   def self.check_matrix_bonus(matrix,invoice)
-    if User.where(parent_uuid:matrix.user.uuid).select(:id).count == 2
+    # Matrix.find(2)
+    user_matrix_no   = matrix.user.matrices.where(plan_id: matrix.plan_id).select(:id).count
+    required_directs = 2
+    required_directs = 5 if user_matrix_no == 2
+    required_directs = 8 if user_matrix_no == 3
+    if self.directs_on_plan(matrix) == required_directs
       value = ((matrix.plan.price * 14) * 0.05).round(2)
       total = "#{matrix.users.to_s},#{invoice.user.id}"
       bonus = matrix.user.rewards.create(value: value, reward_type_id: 15, reward_status_id: 11, currency_id: 11, subscription_id: matrix.user.subscriptions.last.id)
@@ -31,6 +40,14 @@ module Compensation
     parent_plan = parent.subscriptions.where(subscription_status_id:11).count > 0 ? (parent.subscriptions.where(subscription_status_id:11).last.plan.price) : (false)
     total       = "#{parent.id},#{invoice.user.id}"
     Matrix.create(user_id: parent.id, users:total, plan_id: invoice.plan.id) if parent_plan && invoice.plan.price >=  parent_plan 
+  end
+
+  def self.directs_on_plan(matrix)
+    directs_on_plan = []
+    User.where(parent_uuid:matrix.user.uuid).select(:id).map { |x|
+      directs_on_plan.push(1) if x.subscriptions.where(plan_id:matrix.plan_id).last
+    }
+    return directs_on_plan.count
   end
 
   # create direct bonus on the system
