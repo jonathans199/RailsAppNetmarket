@@ -11,6 +11,9 @@ module Compensation
           available = true
           available = false if user_matrix_no == 2 && self.directs_on_plan(x) < 3
           available = false if user_matrix_no == 3 && self.directs_on_plan(x) < 6
+          available = false if user_matrix_no == 4 && self.directs_on_plan(x) < 9
+          # available = false if (2..6).cover? user_matrix_no && self.directs_on_plan(x) < 3
+
           total = "#{x.users.to_s},#{invoice.user.id}" if available
           final_update = x.update(users: "#{total}") if available
         end
@@ -20,11 +23,13 @@ module Compensation
 
   # matrix reach 14 users
   def self.check_matrix_bonus(matrix,invoice)
-    # Matrix.find(2)
+
     user_matrix_no   = matrix.user.matrices.where(plan_id: matrix.plan_id).select(:id).count
     required_directs = 2
     required_directs = 5 if user_matrix_no == 2
     required_directs = 8 if user_matrix_no == 3
+    required_directs = 11 if user_matrix_no == 4
+
     if self.directs_on_plan(matrix) >= required_directs
       value = ((matrix.plan.price * 14) * 0.05).round(2)
       total = "#{matrix.users.to_s},#{invoice.user.id}"
