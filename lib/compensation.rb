@@ -25,7 +25,7 @@ module Compensation
     required_directs = 2
     required_directs = 5 if user_matrix_no == 2
     required_directs = 8 if user_matrix_no == 3
-    if self.directs_on_plan(matrix) == required_directs
+    if self.directs_on_plan(matrix) >= required_directs
       value = ((matrix.plan.price * 14) * 0.05).round(2)
       total = "#{matrix.users.to_s},#{invoice.user.id}"
       bonus = matrix.user.rewards.create(value: value, reward_type_id: 15, reward_status_id: 11, currency_id: 11, subscription_id: matrix.user.subscriptions.last.id)
