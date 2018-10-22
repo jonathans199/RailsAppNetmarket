@@ -20,7 +20,7 @@ class Api::V1::Client::UsersController < ApplicationController
     referer           = User.find_by(username: params[:parent_uuid])
     referer           = User.find_by(uuid: params[:parent_uuid]) if !referer
     @user.parent_uuid = referer.uuid if referer
-
+    @user.confirmed_at = Time.now
     # render json:  @user
     password  = params[:password]
     if @user.save
