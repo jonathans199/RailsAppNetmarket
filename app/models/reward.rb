@@ -16,8 +16,9 @@
 
 class Reward < ApplicationRecord
   before_create :generate_uuid
-  validate :check_if_active_subs
   before_create :check_max_value
+
+  validate :check_if_active_subs, :on => :create
 
   belongs_to :user, required: false
 	belongs_to :reward_type, required: false, class_name: 'RewardType', primary_key: 'code', foreign_key: 'reward_type_id'
