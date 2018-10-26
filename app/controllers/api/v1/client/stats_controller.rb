@@ -18,13 +18,14 @@ class Api::V1::Client::StatsController < ApplicationController
       counter: 0
     }
   end
+
   # show rewards for every subscription on the user account
   def investments
-    sentence = params[:id].to_i > 0 ? (@current_user.rewards.where(subscription_id:params[:id]).order(created_at: :desc).map { |x| investments_filter(x) }) : (@current_user.rewards.where(reward_type_id:11).order(created_at: :desc).map { |x| investments_filter(x) })
+    sentence = params[:id].to_i > 0 ? (@current_user.rewards.where(subscription_id:params[:id]).order(created_at: :desc).map { |x| investments_filter(x) }) : (@current_user.rewards.where(reward_type_id:11).order(created_at: :desc).map { |x| investments_filter(x) if x.value > 0 })
     render json: {
       user_investments: @current_user.subscriptions.where(plan_id: 1..6).map { |x| subs_filter(x) },
       rewards: sentence
-   }
+    }
   end
 
   # list withdrawal requests
