@@ -29,6 +29,7 @@ class Api::V1::Admin::UsersController < ApplicationController
       user['created_at'] = user_tmp.created_at.strftime("%d/%m/%Y %I:%M%p")
       user['updated_at'] = user_tmp.updated_at.strftime("%d/%m/%Y %I:%M%p")
       user['parent']  = user_tmp.parent
+      user['matrices']  = user_tmp.matrices.count
       user['sponsor'] = user_tmp.sponsor ? (user_tmp.sponsor.username) : (nil)
       user['active']  = user_tmp.active
       user
