@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
         scope 'stats' do
           get 'binary', to: 'stats#binary'
+          get 'pie', to: 'stats#pie'
           get 'investments', to: 'stats#investments'
           get 'purchases', to: 'stats#purchases'
           get 'withdrew', to: 'stats#withdrew'
