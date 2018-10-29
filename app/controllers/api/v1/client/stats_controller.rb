@@ -1,5 +1,14 @@
 class Api::V1::Client::StatsController < ApplicationController
 
+  # pie chart current rewards
+  def pie 
+    total   = (@current_user.subscriptions.map{ |x| x.plan.price }.reduce(0,:+) * 2)
+    current = @current_user.rewards.map{ |x| x.value }.reduce(0,:+)
+    current = ((current * 100) / total).round(2)
+    left    = (current.round(2) -100).round(2).abs
+    render json: { current: current, left: left }, status: 200
+  end
+
   # show stats for binary rewards on current user
   def binary
     render json: @current_user.rewards.where(reward_type_id:13).order(created_at: :desc).map { |x| binary_filter(x) }
