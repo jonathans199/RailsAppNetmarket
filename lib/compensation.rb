@@ -49,10 +49,10 @@ module Compensation
 
   def self.directs_on_plan(matrix)
     directs_on_plan = []
-    User.where(parent_uuid:matrix.user.uuid).map { |x|
-      directs_on_plan.push(x.username) if x.subscriptions.where(plan_id:matrix.plan_id).last
+    User.where(parent_uuid:matrix.user.uuid).select(:id).map { |x|
+      directs_on_plan.push(1) if x.subscriptions.where(plan_id:matrix.plan_id).last
     }
-    return directs_on_plan
+    return directs_on_plan.count
   end
 
   # create direct bonus on the system
