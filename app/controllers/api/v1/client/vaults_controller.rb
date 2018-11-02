@@ -5,10 +5,10 @@ class Api::V1::Client::VaultsController < ApplicationController
   def show
     vault       = Vault.where(user_id:@current_user.id).select(:amount).first
     balance_usd = vault.amount.round(2)
-    total_unilevel = @current_user.rewards.where(reward_type_id:12, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
-    total_matrices = @current_user.rewards.where(reward_type_id:15, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
-    total_rewards = @current_user.rewards.where(reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
-    total_trading = @current_user.rewards.where(reward_type_id:11, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+)
+    total_unilevel = @current_user.rewards.where(reward_type_id:12, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+).round(2)
+    total_matrices = @current_user.rewards.where(reward_type_id:15, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+).round(2)
+    total_rewards = @current_user.rewards.where(reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+).round(2)
+    total_trading = @current_user.rewards.where(reward_type_id:11, reward_status_id:12).select(:id,:value).map{ |x| x.value }.reduce(0,:+).round(2)
 
     render json: {
       balance_usd: balance_usd,

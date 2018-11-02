@@ -3,7 +3,6 @@ class Api::V1::Admin::SessionsController < ApplicationController
 
   def create
     user = TempUser.find_by(username: params[:username])
-    
     if user && user.authenticate(params[:password])
       if user.confirmed_at?
         auth_token = JsonWebToken.encode({uuid: user.uuid})

@@ -128,7 +128,9 @@ class Api::V1::Client::UsersController < ApplicationController
         :country,
         :about,
         :right,
-        :document)
+        :document,
+        :btc_wallet,
+        :ltc_wallet)
     end
 
     def filter(object)
