@@ -25,6 +25,8 @@ class Withdrawal < ApplicationRecord
   belongs_to :user, required: false
   before_create :generate_uuid
   has_many :coupons
+
+  validates :wallet, presence: true
   
   private
 		def generate_uuid
