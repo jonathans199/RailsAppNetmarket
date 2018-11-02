@@ -22,7 +22,7 @@ class Api::V1::Client::WithdrawalsController < ApplicationController
       errors.push("Wallet can't be blank")            if params[:wallet].blank?
     end
     errors.push("Value can't be negative or zero") if params[:value].to_f <= 0
-    errors.push("Minimum withdraw amount is 100")  if params[:value].to_f < 100
+    errors.push("Minimum withdraw amount is 50")  if params[:value].to_f < 50
     balance_error = check_balance(@current_user, params[:value])
     errors.push(balance_error) unless balance_error.blank?
     
