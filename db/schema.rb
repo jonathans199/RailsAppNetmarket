@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181012190915) do
+ActiveRecord::Schema.define(version: 20181102180126) do
 
   create_table "currencies", force: :cascade do |t|
     t.string "name"
@@ -191,6 +191,8 @@ ActiveRecord::Schema.define(version: 20181012190915) do
     t.datetime "updated_at", null: false
     t.string "ancestry"
     t.integer "ancestry_depth", default: 0
+    t.string "btc_wallet"
+    t.string "ltc_wallet"
     t.index ["ancestry"], name: "index_users_on_ancestry"
     t.index ["uuid"], name: "index_users_on_uuid"
   end
