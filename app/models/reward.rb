@@ -34,7 +34,7 @@ class Reward < ApplicationRecord
     # check if the user holds at least one active plan
     def check_if_active_subs
       active_sub    = self.user.subscriptions.where(subscription_status_id: 11).count > 0
-      return true if active_sub || self.reward_type_id == 15
+      return true if active_sub
       return errors.add(:subscription, "No active subscriptions") if !active_sub
     end
 
@@ -44,7 +44,7 @@ class Reward < ApplicationRecord
       rewards_value = self.user.rewards.map { |x| x.value }.reduce(0,:+)
       active_subs   = self.user.subscriptions.where(subscription_status_id: 11)
       
-      if (rewards_value + self.value) <= max_value || self.reward_type_id == 15
+      if (rewards_value + self.value) <= max_value
         return true
       else
         self.value = (max_value - rewards_value).round(2) if active_subs.count > 0
