@@ -8,14 +8,26 @@ module Compensation
           self.check_matrix_bonus(x,invoice)
         else
           user_matrix_no = x.user.matrices.where(plan_id: x.plan_id).select(:id).count
-          available = true
-          available = false if user_matrix_no == 2 && self.directs_on_plan(x) < 3
-          available = false if user_matrix_no == 3 && self.directs_on_plan(x) < 6
-          available = false if user_matrix_no == 4 && self.directs_on_plan(x) < 9
-          # available = false if (2..6).cover? user_matrix_no && self.directs_on_plan(x) < 3
+          allow = true #1
+          allow = false if user_matrix_no == 2 && self.directs_on_plan(x) < 3 #2
+          allow = false if user_matrix_no == 3 && self.directs_on_plan(x) < 6 #3
+          allow = false if user_matrix_no == 4 && self.directs_on_plan(x) < 9 #4
+          allow = false if user_matrix_no == 5 && self.directs_on_plan(x) < 12 #5
+          allow = false if user_matrix_no == 6 && self.directs_on_plan(x) < 15 #6
+          allow = false if user_matrix_no == 7 && self.directs_on_plan(x) < 18 #7
+          allow = false if user_matrix_no == 8 && self.directs_on_plan(x) < 22 #8
+          allow = false if user_matrix_no == 9 && self.directs_on_plan(x) < 26 #9
+          allow = false if user_matrix_no == 10 && self.directs_on_plan(x) < 30 #10
+          allow = false if user_matrix_no == 11 && self.directs_on_plan(x) < 34 #11
+          allow = false if user_matrix_no == 12 && self.directs_on_plan(x) < 39 #12
+          allow = false if user_matrix_no == 13 && self.directs_on_plan(x) < 44 #13
+          allow = false if user_matrix_no == 14 && self.directs_on_plan(x) < 49 #14
+          allow = false if user_matrix_no == 15 && self.directs_on_plan(x) < 55 #15
+          allow = false if user_matrix_no == 16 && self.directs_on_plan(x) < 60 #16
+          # allow = false if (2..6).cover? user_matrix_no && self.directs_on_plan(x) < 3
 
-          total = "#{x.users.to_s},#{invoice.user.id}" if available
-          final_update = x.update(users: "#{total}") if available
+          total = "#{x.users.to_s},#{invoice.user.id}" if allow
+          final_update = x.update(users: "#{total}")   if allow
         end
       end
     }
@@ -23,12 +35,24 @@ module Compensation
 
   # matrix reach 14 users
   def self.check_matrix_bonus(matrix,invoice)
-
     user_matrix_no   = matrix.user.matrices.where(plan_id: matrix.plan_id).select(:id).count
-    required_directs = 2
-    required_directs = 5 if user_matrix_no == 2
-    required_directs = 8 if user_matrix_no == 3
-    required_directs = 11 if user_matrix_no == 4
+    required_directs = 2 #1
+    required_directs = 5 if user_matrix_no == 2 #2
+    required_directs = 8 if user_matrix_no == 3 #3
+    required_directs = 11 if user_matrix_no == 4 #4
+    required_directs = 14 if user_matrix_no == 5 #5
+    required_directs = 17 if user_matrix_no == 6 #6
+    required_directs = 21 if user_matrix_no == 7 #7
+    required_directs = 25 if user_matrix_no == 8 #8
+    required_directs = 29 if user_matrix_no == 9 #9
+    required_directs = 33 if user_matrix_no == 10 #10
+    required_directs = 37 if user_matrix_no == 11 #11
+    required_directs = 42 if user_matrix_no == 12 #12
+    required_directs = 47 if user_matrix_no == 13 #13
+    required_directs = 52 if user_matrix_no == 14 #14
+    required_directs = 57 if user_matrix_no == 15 #15
+    required_directs = 62 if user_matrix_no == 16 #16
+    # until here every matrix must have 5 directs
 
     if self.directs_on_plan(matrix) >= required_directs
       value = ((matrix.plan.price * 14) * 0.05).round(2)
@@ -47,6 +71,7 @@ module Compensation
     Matrix.create(user_id: parent.id, users:total, plan_id: invoice.plan.id) if parent_plan
   end
 
+  # count how many direct users filter by plan
   def self.directs_on_plan(matrix)
     directs_on_plan = []
     User.where(parent_uuid:matrix.user.uuid).select(:id).map { |x|
