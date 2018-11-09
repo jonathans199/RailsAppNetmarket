@@ -3,32 +3,32 @@ module Compensation
     matrix = Matrix.where(reedemed: false, plan_id: invoice.plan.id).map{ |x| x if x.user.subscriptions.count > 0 }.compact
     matrix.map { |x|
       users_array = x.users.split(",")
-      if !users_array.include?(invoice.user.id.to_s)
-        if users_array.count == 14
-          self.check_matrix_bonus(x,invoice)
-        else
-          user_matrix_no = x.user.matrices.where(plan_id: x.plan_id).select(:id).count
-          allow = true #1
-          allow = false if user_matrix_no == 2 && self.directs_on_plan(x) < 3 #2
-          allow = false if user_matrix_no == 3 && self.directs_on_plan(x) < 6 #3
-          allow = false if user_matrix_no == 4 && self.directs_on_plan(x) < 9 #4
-          allow = false if user_matrix_no == 5 && self.directs_on_plan(x) < 12 #5
-          allow = false if user_matrix_no == 6 && self.directs_on_plan(x) < 15 #6
-          allow = false if user_matrix_no == 7 && self.directs_on_plan(x) < 18 #7
-          allow = false if user_matrix_no == 8 && self.directs_on_plan(x) < 22 #8
-          allow = false if user_matrix_no == 9 && self.directs_on_plan(x) < 26 #9
-          allow = false if user_matrix_no == 10 && self.directs_on_plan(x) < 30 #10
-          allow = false if user_matrix_no == 11 && self.directs_on_plan(x) < 34 #11
-          allow = false if user_matrix_no == 12 && self.directs_on_plan(x) < 39 #12
-          allow = false if user_matrix_no == 13 && self.directs_on_plan(x) < 44 #13
-          allow = false if user_matrix_no == 14 && self.directs_on_plan(x) < 49 #14
-          allow = false if user_matrix_no == 15 && self.directs_on_plan(x) < 55 #15
-          allow = false if user_matrix_no == 16 && self.directs_on_plan(x) < 60 #16
-          # allow = false if (2..6).cover? user_matrix_no && self.directs_on_plan(x) < 3
-
-          total = "#{x.users.to_s},#{invoice.user.id}" if allow
-          final_update = x.update(users: "#{total}")   if allow
-        end
+      if users_array.count == 14
+        self.check_matrix_bonus(x,invoice)
+      else
+        user_matrix_no = x.user.matrices.where(plan_id: x.plan_id).select(:id).count
+        allow = true
+        allow = false if user_matrix_no == 1  && self.directs_on_matrix_by_plan(x) == 2 #1
+        allow = false if user_matrix_no == 2  && self.directs_on_matrix_by_plan(x) < 2 || user_matrix_no == 2  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 2  && self.directs_on_matrix_by_plan(x) == 5 && x.user.uuid == invoice.user.parent_uuid #2
+        allow = false if user_matrix_no == 3  && self.directs_on_matrix_by_plan(x) < 5 || user_matrix_no == 3  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 3  && self.directs_on_matrix_by_plan(x) == 8 && x.user.uuid == invoice.user.parent_uuid  #3
+        allow = false if user_matrix_no == 4  && self.directs_on_matrix_by_plan(x) < 8 || user_matrix_no == 4  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 4  && self.directs_on_matrix_by_plan(x) == 11 && x.user.uuid == invoice.user.parent_uuid #4
+        allow = false if user_matrix_no == 5  && self.directs_on_matrix_by_plan(x) < 11 || user_matrix_no == 5  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 5  && self.directs_on_matrix_by_plan(x) == 14 && x.user.uuid == invoice.user.parent_uuid #5
+        allow = false if user_matrix_no == 6  && self.directs_on_matrix_by_plan(x) < 14 || user_matrix_no == 6  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 6  && self.directs_on_matrix_by_plan(x) == 17 && x.user.uuid == invoice.user.parent_uuid #6
+        # until here matrix must have 3 directs
+        allow = false if user_matrix_no == 7  && self.directs_on_matrix_by_plan(x) < 17 || user_matrix_no == 7  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 7  && self.directs_on_matrix_by_plan(x) == 21 && x.user.uuid == invoice.user.parent_uuid #7
+        allow = false if user_matrix_no == 8  && self.directs_on_matrix_by_plan(x) < 21 || user_matrix_no == 8  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 8  && self.directs_on_matrix_by_plan(x) == 25 && x.user.uuid == invoice.user.parent_uuid #8
+        allow = false if user_matrix_no == 9  && self.directs_on_matrix_by_plan(x) < 25 || user_matrix_no == 9  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 9  && self.directs_on_matrix_by_plan(x) == 29 && x.user.uuid == invoice.user.parent_uuid #9
+        allow = false if user_matrix_no == 10 && self.directs_on_matrix_by_plan(x) < 29 || user_matrix_no == 10  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 10  && self.directs_on_matrix_by_plan(x) == 33 && x.user.uuid == invoice.user.parent_uuid #10
+        allow = false if user_matrix_no == 11 && self.directs_on_matrix_by_plan(x) < 33 || user_matrix_no == 11  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 11  && self.directs_on_matrix_by_plan(x) == 37 && x.user.uuid == invoice.user.parent_uuid #11
+        # until here matrix must have 4 directs
+        allow = false if user_matrix_no == 12 && self.directs_on_matrix_by_plan(x) < 38 || user_matrix_no == 12  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 12  && self.directs_on_matrix_by_plan(x) == 42 && x.user.uuid == invoice.user.parent_uuid #12
+        allow = false if user_matrix_no == 13 && self.directs_on_matrix_by_plan(x) < 43 || user_matrix_no == 13  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 13  && self.directs_on_matrix_by_plan(x) == 47 && x.user.uuid == invoice.user.parent_uuid #13
+        allow = false if user_matrix_no == 14 && self.directs_on_matrix_by_plan(x) < 48 || user_matrix_no == 14  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 14  && self.directs_on_matrix_by_plan(x) == 52 && x.user.uuid == invoice.user.parent_uuid #14
+        allow = false if user_matrix_no == 15 && self.directs_on_matrix_by_plan(x) < 54 || user_matrix_no == 15  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 15  && self.directs_on_matrix_by_plan(x) == 57 && x.user.uuid == invoice.user.parent_uuid #15
+        allow = false if user_matrix_no == 16 && self.directs_on_matrix_by_plan(x) < 59 || user_matrix_no == 16  && users_array.count == 1 && x.user.uuid != invoice.user.parent_uuid ||  user_matrix_no == 16  && self.directs_on_matrix_by_plan(x) == 62 && x.user.uuid == invoice.user.parent_uuid #16
+        # until here matrix must have 5 directs
+        total = "#{x.users.to_s},#{invoice.user.id}" if allow
+        final_update = x.update(users: "#{total}")   if allow
       end
     }
   end
@@ -42,11 +42,13 @@ module Compensation
     required_directs = 11 if user_matrix_no == 4 #4
     required_directs = 14 if user_matrix_no == 5 #5
     required_directs = 17 if user_matrix_no == 6 #6
+    # until here user matrix must have 3 directs
     required_directs = 21 if user_matrix_no == 7 #7
     required_directs = 25 if user_matrix_no == 8 #8
     required_directs = 29 if user_matrix_no == 9 #9
     required_directs = 33 if user_matrix_no == 10 #10
     required_directs = 37 if user_matrix_no == 11 #11
+    # until here user matrix must have 4 directs
     required_directs = 42 if user_matrix_no == 12 #12
     required_directs = 47 if user_matrix_no == 13 #13
     required_directs = 52 if user_matrix_no == 14 #14
@@ -54,7 +56,11 @@ module Compensation
     required_directs = 62 if user_matrix_no == 16 #16
     # until here every matrix must have 5 directs
 
-    if self.directs_on_plan(matrix) >= required_directs
+    directs = self.directs_on_matrix_by_plan(matrix)
+    # here i sum one if the last user on matrix its a direct from the matrix
+    directs = self.directs_on_matrix_by_plan(matrix) + 1 if matrix.user.uuid == invoice.user.parent_uuid
+   
+    if directs >= required_directs
       value = ((matrix.plan.price * 14) * 0.05).round(2)
       total = "#{matrix.users.to_s},#{invoice.user.id}"
       bonus = matrix.user.rewards.create(value: value, reward_type_id: 15, reward_status_id: 11, currency_id: 11, subscription_id: matrix.user.subscriptions.last.id)
@@ -72,12 +78,11 @@ module Compensation
   end
 
   # count how many direct users filter by plan
-  def self.directs_on_plan(matrix)
-    directs_on_plan = []
-    User.where(parent_uuid:matrix.user.uuid).select(:id).map { |x|
-      directs_on_plan.push(1) if x.subscriptions.where(plan_id:matrix.plan_id).last
-    }
-    return directs_on_plan.count
+  def self.directs_on_matrix_by_plan(matrix)
+    direct_total = matrix.user.matrices.where(plan_id: matrix.plan_id).map{ |x|
+      x.users.split(",").map{ |y| y if y != '1' && User.find(y).parent_uuid === matrix.user.uuid }.compact
+    }.flatten
+    return direct_total.count
   end
 
   # create direct bonus on the system
