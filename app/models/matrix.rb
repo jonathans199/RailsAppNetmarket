@@ -12,6 +12,7 @@ class Matrix < ApplicationRecord
 			user_matrix_no  = self.user.matrices.where(plan_id: self.plan_id).select(:id).count
 			current_directs	= directs_on_matrix(self)
 
+			base_allowed    = 2 if user_matrix_no == 1
 			base_allowed 		= 3 if user_matrix_no == 2
 			base_allowed 		= 3 if user_matrix_no == 3
 			base_allowed 		= 3 if user_matrix_no == 4
