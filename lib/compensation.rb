@@ -1,4 +1,5 @@
 module Compensation
+  
   def self.update_matrix(invoice)
     matrix = Matrix.where(reedemed: false, plan_id: invoice.plan.id).map{ |x| x if x.user.subscriptions.count > 0 }.compact
     matrix.map { |x|
@@ -148,5 +149,4 @@ module Compensation
     EmailNotification.send_notification(invoice)
   end
 
-  
 end
