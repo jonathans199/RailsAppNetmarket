@@ -49,7 +49,7 @@ class Api::V1::Admin::WithdrawalsController < ApplicationController
       withdrawal['currency'] = withdrawal_tmp.currency ? (withdrawal_tmp.currency.name) : ('')
       withdrawal['withdrawal_status_id'] = withdrawal_tmp.withdrawal_status.name
       withdrawal['withdrawal_type_id'] = withdrawal_tmp.withdrawal_type.name
-      withdrawal['currency_id'] = withdrawal_tmp.currency.name
+      withdrawal['currency_id'] = withdrawal_tmp.currency ? (withdrawal_tmp.currency.name) : ('')
       withdrawal['created_at'] = withdrawal_tmp.created_at.strftime("%d/%m/%Y %I:%M%p")
       withdrawal
     end
