@@ -74,7 +74,7 @@ module Compensation
   def self.first_matrix_on_plan(invoice)
     parent      = User.where(uuid:invoice.user.parent_uuid).select(:id,:uuid).last
     parent_plan = parent.subscriptions.where(subscription_status_id:11, plan_id: invoice.plan.id).last
-    total       = "#{parent.id},#{invoice.user.id}"
+    total       = "#{parent.id}"
     Matrix.create(user_id: parent.id, users:total, plan_id: invoice.plan.id) if parent_plan
   end
 
