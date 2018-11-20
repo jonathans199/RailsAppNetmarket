@@ -32,6 +32,8 @@ class Api::V1::Client::WithdrawalsController < ApplicationController
       currency    = params[:currency_id].to_i == 14 ? (11) : (params[:currency_id].to_i)
       txid        = user_to_gift.username if params[:currency_id].to_i == 14 && user_to_gift
       status      = params[:currency_id].to_i == 14 ? (12) : (11)
+      # ticker      = ((BittrexInt.btc_usd * 0.1) + BittrexInt.btc_usd).round(4) if params[:currency_id].to_i == 12
+      # ticker      = ((BittrexInt.ltc_usd * 0.1) + BittrexInt.ltc_usd * 0.1).round(4) if params[:currency_id].to_i == 13
       withdrawal  = Withdrawal.new(
         user_id: @current_user.id,
         withdrawal_type_id: params[:withdrawal_type_id],
@@ -43,6 +45,7 @@ class Api::V1::Client::WithdrawalsController < ApplicationController
         wallet: params[:wallet],
         comments: params[:comments],
         txid: txid
+        # ticker: ticker
       )
       if withdrawal.save
         user_to_gift.rewards.create(value:calculate_settle(params[:value]), reward_type_id:14,reward_status_id:11,currency_id:11) if params[:currency_id].to_i == 14 && user_to_gift

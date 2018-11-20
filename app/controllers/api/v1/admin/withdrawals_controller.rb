@@ -23,7 +23,11 @@ class Api::V1::Admin::WithdrawalsController < ApplicationController
     return render json: { message: 'TXID required' }, status: :unprocessable_entity if params[:txid].nil? && Withdrawal.find_by(uuid: params[:uuid]).withdrawal_type_id == 11
     @withdrawal = Withdrawal.find_by(uuid: params[:uuid])
     return render json: { error: 'Withdrawal not exist' }, status: :bad_request if !@withdrawal
-    paid = @withdrawal.update(:withdrawal_status_id => 12, :txid => params[:txid])
+    paid = @withdrawal.update(
+      :withdrawal_status_id => 12, 
+      :txid => params[:txid], 
+      :ticker => params[:ticker]
+    )
     settle_crypto = params[:settle_crypto]
     render json: @withdrawal, status: :ok
   end
